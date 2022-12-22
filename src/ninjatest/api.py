@@ -23,11 +23,9 @@ def returndict_broken(request):
     """Return a dict directly, the foo field is not resolved."""
     return {"username": "some user"}
 
-@api.get("/schema/returndict-manual-works", response=UserOut)
-def returndict_works(request):
-    """Use the UserOut schema manually, the foo field is resolved, but only if a Django object is included."""
-    # doesn't work
-    # schema = UserOut.from_orm({"username": "some user"})
-    # works
-    schema = UserOut.from_orm({"username": "some user", "thisisunused": User.objects.get_or_create(username="test")[0]})
+@api.get("/schema/returndict-manual-schema", response=UserOut)
+def returndict_manual_schema(request):
+    """Use the UserOut schema manually, the foo field is resolved.
+    Note that this fails when run in a debugger with breakpoints set."""
+    schema = UserOut.from_orm({"username": "some user"})
     return HttpResponse(schema.json())
