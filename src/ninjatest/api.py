@@ -25,6 +25,9 @@ def returndict_broken(request):
 
 @api.get("/schema/returndict-manual-works", response=UserOut)
 def returndict_works(request):
-    """Use the UserOut schema manually, the foo field is resolved."""
-    schema = UserOut.from_orm({"username": "some user"})
+    """Use the UserOut schema manually, the foo field is resolved, but only if a Django object is included."""
+    # doesn't work
+    # schema = UserOut.from_orm({"username": "some user"})
+    # works
+    schema = UserOut.from_orm({"username": "some user", "thisisunused": User.objects.get_or_create(username="test")[0]})
     return HttpResponse(schema.json())
